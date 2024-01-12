@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: my-laravel-app
+        container_name: my-laravel-app
+        restart: unless-stopped
+        volumes:
+            - ./:/var/www
+            - ./public:/var/www/public
+        ports:
+            - "8981:80"
+        networks:
+            - app-network
+
+    db:
+        image: mysql:5.7
+        container_name: mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: laravel
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: secret
+            MYSQL_USER: laraveluser
+        networks:
+            - app-network
+        volumes:
+            - dbdata:/var/lib/mysql
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    dbdata:
+        driver: local
