@@ -26,7 +26,11 @@ class OpenTelementryServiceProvider extends ServiceProvider
 
         $this->app->singleton(TracerProvider::class, function ($app) {
             $otlpTransportFactory = new OtlpHttpTransportFactory();
-            $transport = $otlpTransportFactory->create('http://host.docker.internal:4318/v1/traces', 'application/json');
+            $local = 'http://host.docker.internal:4318/v1/traces';
+            $hosted = 'https://ingest.us.signoz.cloud:443/v1/traces';
+            $transport = $otlpTransportFactory->create($hosted, 'application/json', [
+                'Signoz-Access-Token' => 'b7ea9945-a7a5-4781-8cce-756195cd6120',
+            ]);
 
             $exporter = new SpanExporter($transport);
 

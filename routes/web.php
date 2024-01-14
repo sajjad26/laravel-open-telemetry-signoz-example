@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BooksController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use OpenTelemetry\API\Globals;
 use OpenTelemetry\SDK\Trace\TracerProvider;
@@ -15,15 +17,6 @@ use OpenTelemetry\SDK\Trace\TracerProvider;
 |
 */
 
-Route::get('/', function () {
-    /** @var TracerProvider */
-    $tracerProvider = app()->make(TracerProvider::class);
-    $tracer = $tracerProvider->getTracer(
-        'web-app-tracer'
-    );
-    $span = $tracer->spanBuilder('home-route-span')->startSpan();
-    $number = rand();
-    $view = view('welcome');
-    $span->end();
-    return $view;
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/books', [BooksController::class, 'index'])->name('books');
+Route::get('/books/{id}', [BooksController::class, 'book'])->name('book');

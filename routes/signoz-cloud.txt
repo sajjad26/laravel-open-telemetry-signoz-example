@@ -1,0 +1,21 @@
+Hey Sajjad A,
+Your SigNoz cloud account is ready to be used.
+
+Just visit this SigNoz Invitation URL (https://xlak-xafw.us.signoz.cloud/signup?token=cffa4480dd0efc6c00f82e997d720aa4) to complete the signup.
+Here are SigNoz instance details for future reference:
+Email: gejoho4347@talmetry.com
+SigNoz URL: https://xlak-xafw.us.signoz.cloud
+
+You can use the following ingestion key to start sending your telemetry data to SigNoz:
+Ingestion key: b7ea9945-a7a5-4781-8cce-756195cd6120
+
+Follow docs here 👉 to Get Started with SigNoz Cloud
+
+If you are facing any issues with sending data to your cloud instance or getting started, please write to cloud-support@signoz.io
+
+const exporter = new OTLPTraceExporter({
+url: 'https://ingest.us.signoz.cloud:443/v1/traces',
+headers: {
+"signoz-access-token": "b7ea9945-a7a5-4781-8cce-756195cd6120",
+},
+});
