@@ -5,7 +5,6 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Queue\InteractsWithQueue;
-use OpenTelemetry\API\Globals;
 
 class DatabaseQueryListener
 {
@@ -22,8 +21,7 @@ class DatabaseQueryListener
      */
     public function handle(QueryExecuted $event): void
     {
-        $tracerProvider = Globals::tracerProvider();
-        $tracer = $tracerProvider->getTracer('web-endpoints-tracer');
+        $tracer = app('opentelemetry.tracer');
         $span = $tracer->spanBuilder('database.query')->startSpan();
         $span->setAttribute('query', $event->sql);
         $span->setAttribute('duration', $event->time);

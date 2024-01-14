@@ -19,8 +19,8 @@ class BooksController extends Controller
     public function book(int $id)
     {
         $book = Book::with('authors')->find($id);
-        Span::getCurrent()->setAttribute('id', $book->id);
-        Span::getCurrent()->setAttribute('name', $book->name);
+        Span::getCurrent()->setAttribute('book.id', $book->id);
+        Span::getCurrent()->setAttribute('book.name', $book->name);
         return view('book', compact('book'));
     }
 }

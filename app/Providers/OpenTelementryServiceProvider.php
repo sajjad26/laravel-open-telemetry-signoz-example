@@ -2,19 +2,19 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use OpenTelemetry\API\Globals;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 use OpenTelemetry\Contrib\Otlp\SpanExporter;
 use OpenTelemetry\SDK\Common\Attribute\Attributes;
 use OpenTelemetry\SDK\Resource\ResourceInfo;
 use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
-use OpenTelemetry\SDK\Sdk;
 use OpenTelemetry\SDK\Trace\Sampler\AlwaysOnSampler;
 use OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor;
 use OpenTelemetry\SDK\Trace\TracerProvider;
-use OpenTelemetry\SDK\Trace\TracerProviderBuilder;
 use OpenTelemetry\SemConv\ResourceAttributes;
+use OpenTelemetry\API\Trace\TracerInterface;
+use OpenTelemetry\SemConv\TraceAttributes;
 
 class OpenTelementryServiceProvider extends ServiceProvider
 {
@@ -24,18 +24,18 @@ class OpenTelementryServiceProvider extends ServiceProvider
     public function register(): void
     {
 
-        $this->app->singleton(TracerProvider::class, function ($app) {
+        $this->app->singleton('opentelemetry.tracer', function ($app) {
             $otlpTransportFactory = new OtlpHttpTransportFactory();
             $local = 'http://host.docker.internal:4318/v1/traces';
-            $hosted = 'https://ingest.us.signoz.cloud:443/v1/traces';
+            $hosted = 'https://ingest.eu.signoz.cloud:443/v1/traces';
             $transport = $otlpTransportFactory->create($hosted, 'application/json', [
-                'Signoz-Access-Token' => 'b7ea9945-a7a5-4781-8cce-756195cd6120',
+                'Signoz-Access-Token' => '56ef85a0-5378-4c66-aede-b82b6a2d7273',
             ]);
 
             $exporter = new SpanExporter($transport);
 
             $resource = ResourceInfoFactory::defaultResource()->merge(ResourceInfo::create(Attributes::create([
-                ResourceAttributes::SERVICE_NAME => 'My PHP App',
+                ResourceAttributes::SERVICE_NAME => config('app.name'),
             ])));
 
             $tracerProvider = new TracerProvider(
@@ -44,12 +44,20 @@ class OpenTelementryServiceProvider extends ServiceProvider
                 $resource,
             );
 
-            Sdk::builder()
-                ->setTracerProvider($tracerProvider)
-                ->setAutoShutdown(true)
-                ->buildAndRegisterGlobal();
+            return $tracerProvider->getTracer('awesome-books-tracer');
+        });
 
-            return $tracerProvider;
+        $this->app->singleton('opentelemetry.rootSpan', function ($app) {
+            /** @var TracerInterface */
+            $tracer = app('opentelemetry.tracer');
+            $span = $tracer->spanBuilder(request()->getRequestUri())->startSpan();
+            $span
+                ->setAttribute(TraceAttributes::URL_PATH, request()->getRequestUri())
+                ->setAttribute(TraceAttributes::HTTP_REQUEST_METHOD, request()->method())
+                ->setAttribute(TraceAttributes::HTTP_METHOD, request()->method());
+            $scope = $span->activate();
+
+            return [$span, $scope];
         });
     }
 
@@ -58,5 +66,12 @@ class OpenTelementryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->app->terminating(function () {
+            [$rootSpan, $rootScope] = app('opentelemetry.rootSpan');
+            if ($rootSpan) {
+                $rootScope->detach();
+                $rootSpan->end();
+            }
+        });
     }
 }

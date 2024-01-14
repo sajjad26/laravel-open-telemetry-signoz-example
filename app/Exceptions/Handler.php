@@ -36,6 +36,5 @@ class Handler extends ExceptionHandler
     {
         $currentSpan = Span::getCurrent();
         $currentSpan->recordException($e);
-        dump($e, $currentSpan);
     }
 }
