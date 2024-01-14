@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\RootSpanMiddleware;
 use App\Http\Middleware\TraceMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -16,6 +17,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
+        RootSpanMiddleware::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
