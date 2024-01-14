@@ -3,12 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Request;
-use OpenTelemetry\API\Globals;
 use OpenTelemetry\API\Trace\Span;
-use OpenTelemetry\Context\Context;
+use OpenTelemetry\API\Trace\StatusCode;
 use Throwable;
-use OpenTelemetry\SDK\Trace\TracerProvider;
 
 class Handler extends ExceptionHandler
 {
@@ -35,6 +32,7 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e)
     {
         $currentSpan = Span::getCurrent();
+        $currentSpan->setStatus(StatusCode::STATUS_ERROR, $e->getMessage());
         $currentSpan->recordException($e);
     }
 }

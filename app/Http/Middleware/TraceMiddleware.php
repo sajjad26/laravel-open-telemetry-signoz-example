@@ -15,9 +15,9 @@ class TraceMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $tracer = app('opentelemetry.tracer');
         $controllerName = get_class($request->route()->getController());
         $actionName = $request->route()->getActionMethod();
-        $tracer = app('opentelemetry.tracer');
         $span = $tracer->spanBuilder("{$controllerName}@{$actionName}")->startSpan();
         $scope = $span->activate();
         $response = $next($request);
