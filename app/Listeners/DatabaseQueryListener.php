@@ -24,7 +24,8 @@ class DatabaseQueryListener
         $tracer = app('opentelemetry.tracer');
         $span = $tracer->spanBuilder('database.query')->startSpan();
         $span->setAttribute('query', $event->sql);
-        $span->setAttribute('duration', $event->time);
+        $span->setAttribute('bindings', $event->bindings);
+        $span->setAttribute('time', $event->time);
         $span->end();
     }
 }
