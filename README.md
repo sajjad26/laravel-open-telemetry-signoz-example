@@ -4,13 +4,13 @@
 composer require open-telemetry/opentelemetry
 ```
 
-I have already create some migrations and seeders to fill in some data for our sample AwesomeBooks application. So run the migrations and the seeds using the following command
+I have already created some migrations and seeders to fill in some data for our sample AwesomeBooks application. So run the migrations and the seeds using the following command
 
 ```bash
 php artisan migrate --seed
 ```
 
-First create `OpenTelementryServiceProvider`
+Now create `OpenTelementryServiceProvider`
 
 ```bash
 php artisan make:provider OpenTelementryServiceProvider
@@ -25,7 +25,7 @@ public function register(): void
         $otlpTransportFactory = new OtlpHttpTransportFactory();
         $signozUrl = config('signoz.host') . '/v1/traces';
         $transport = $otlpTransportFactory->create($signozUrl, 'application/json', [
-            'Signoz-Access-Token' => '56ef85a0-5378-4c66-aede-b82b6a2d7273',
+            'Signoz-Access-Token' => config('signoz.accessToken'),
         ]);
 
         $exporter = new SpanExporter($transport);
