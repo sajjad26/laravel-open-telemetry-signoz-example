@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Book;
-use Exception;
 use OpenTelemetry\API\Trace\Span;
-use OpenTelemetry\Context\Context;
 
 class BooksController extends Controller
 {
