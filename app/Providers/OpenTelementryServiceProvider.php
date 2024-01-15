@@ -26,7 +26,7 @@ class OpenTelementryServiceProvider extends ServiceProvider
             $otlpTransportFactory = new OtlpHttpTransportFactory();
             $signozUrl = config('signoz.host') . '/v1/traces';
             $transport = $otlpTransportFactory->create($signozUrl, 'application/json', [
-                'Signoz-Access-Token' => '56ef85a0-5378-4c66-aede-b82b6a2d7273',
+                'Signoz-Access-Token' => config('signoz.accessToken'),
             ]);
 
             $exporter = new SpanExporter($transport);
