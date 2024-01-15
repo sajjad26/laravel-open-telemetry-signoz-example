@@ -4,7 +4,13 @@
 composer require open-telemetry/opentelemetry
 ```
 
-Create `OpenTelementryServiceProvider`
+I have already create some migrations and seeders to fill in some data for our sample AwesomeBooks application. So run the migrations and the seeds using the following command
+
+```bash
+php artisan migrate --seed
+```
+
+First create `OpenTelementryServiceProvider`
 
 ```bash
 php artisan make:provider OpenTelementryServiceProvider
