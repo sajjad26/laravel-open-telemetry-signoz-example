@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 use OpenTelemetry\Contrib\Otlp\SpanExporter;
@@ -23,12 +22,10 @@ class OpenTelementryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
         $this->app->singleton('opentelemetry.tracer', function ($app) {
             $otlpTransportFactory = new OtlpHttpTransportFactory();
-            $local = 'http://host.docker.internal:4318/v1/traces';
-            $hosted = 'https://ingest.eu.signoz.cloud:443/v1/traces';
-            $transport = $otlpTransportFactory->create($hosted, 'application/json', [
+            $signozUrl = config('signoz.host') . '/v1/traces';
+            $transport = $otlpTransportFactory->create($signozUrl, 'application/json', [
                 'Signoz-Access-Token' => '56ef85a0-5378-4c66-aede-b82b6a2d7273',
             ]);
 
