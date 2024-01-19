@@ -195,7 +195,7 @@ public function boot(): void
 }
 ```
 
-If you have setup everything properly then you should browse the AwesomeBooks application by visiting http://localhost:8981/. Once you have visited a couple of different pages got to the SigNoz dashboard and open the Services page. You will see the `AwesomeBooks` service on the Services page in SigNoz dashboard.
+If you have setup everything properly then you should browse the AwesomeBooks application by visiting http://localhost:8981/books/. Once you have visited a couple of different pages got to the SigNoz dashboard and open the Services page. You will see the `AwesomeBooks` service on the Services page in SigNoz dashboard.
 ![image](https://github.com/sajjad26/laravel-open-telemetry-signoz-example/assets/1017555/bdf0c0da-7d55-48ff-a56e-71c69e0e0fcd)
 
 And you should see a couple of traces on the traces page as well in SigNoz
