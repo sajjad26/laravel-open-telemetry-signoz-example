@@ -195,4 +195,14 @@ public function boot(): void
 }
 ```
 
+If you have setup everything properly then you should browse the AwesomeBooks application by visiting http://localhost:8981/. Once you have visited a couple of different pages got to the SigNoz dashboard and open the Services page. You will see the `AwesomeBooks` service on the Services page in SigNoz dashboard.
+![image](https://github.com/sajjad26/laravel-open-telemetry-signoz-example/assets/1017555/bdf0c0da-7d55-48ff-a56e-71c69e0e0fcd)
+
+And you should see a couple of traces on the traces page as well in SigNoz
+![image](https://github.com/sajjad26/laravel-open-telemetry-signoz-example/assets/1017555/f9ba2d2b-1126-49e1-a0fe-0b4c9ea81961)
+
+This is how a single trace looks like
+![image](https://github.com/sajjad26/laravel-open-telemetry-signoz-example/assets/1017555/ecc5c187-5e87-41e5-98c5-1270d69a5d28)
+
+
 Happy coding and best of luck with your instrumentation endeavors in Laravel using OpenTelemetry and SigNoz. Adios!
