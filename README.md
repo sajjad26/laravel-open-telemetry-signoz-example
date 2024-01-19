@@ -1,3 +1,6 @@
+# Runnig the app
+To run the app just do `docker compose up`
+
 # Install OpenTelemetry
 
 ```bash
